@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   CardFsFileType,
   CardSdk,
@@ -73,11 +73,9 @@ function App() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [historyNotice, setHistoryNotice] = useState<string | null>(null);
 
-  const canWriteToCardFs = useMemo(() => (sdk ? sdk.canWrite() : false), [sdk]);
-
   const loadHistory = (activeSdk: CardSdk) => {
     if (!activeSdk.canRead()) {
-      setHistoryNotice('Read permission is not available for CardFS history.');
+      setHistoryNotice('Read permission is not available for history.');
       return;
     }
 
@@ -100,7 +98,7 @@ function App() {
           return;
         }
 
-        setHistoryNotice(error?.message ?? 'Unable to load CardFS history.');
+        setHistoryNotice(error?.message ?? 'Unable to load history.');
       },
     });
   };
@@ -168,7 +166,7 @@ function App() {
       setHistoryNotice(null);
     } catch (error) {
       console.error('Failed to persist history', error);
-      setHistoryNotice('Failed to save history to CardFS.');
+      setHistoryNotice('Failed to save history.');
     }
   };
 
@@ -300,7 +298,7 @@ function App() {
   return (
     <div className="main">
       <button className="history-toggle" type="button" onClick={() => setIsHistoryOpen((prev) => !prev)}>
-        {isHistoryOpen ? 'Close' : 'History'}
+        History
       </button>
 
       <aside className={`history-panel ${isHistoryOpen ? 'open' : ''}`}>
@@ -327,7 +325,6 @@ function App() {
       <section className="calculator">
         <div className="calculator-head">
           <p className="welcome">Hi, {user.getFullName?.() ?? 'there'}</p>
-          <p className="status">{canWriteToCardFs ? 'History sync: CardFS enabled' : 'History sync: read-only'}</p>
         </div>
 
         <div className="display">{currentInput}</div>
